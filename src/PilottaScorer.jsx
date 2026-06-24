@@ -81,6 +81,12 @@ export default function PilottaScorer() {
   async function clearSavedGame() {
     try { await storageDelete(SAVE_KEY); } catch { /* nothing to delete */ }
     setSavedGameAvailable(false);
+    setRounds([]);
+    setDraft(freshRound(1));
+    setTeamAName(TRANSLATIONS[lang].defaultTeamA);
+    setTeamBName(TRANSLATIONS[lang].defaultTeamB);
+    setTarget(301);
+    setError("");
   }
 
   // ---------- Derived values ----------
@@ -190,16 +196,21 @@ export default function PilottaScorer() {
       if (multiplier === 1 && !d.capot) {
         const bidderDist = 10 - (bidderTrick % 10);
         const defenderDist = 10 - (defenderTrick % 10);
-        if (bidderDist === defenderDist) {
+        console.log(`Bidder dist: ${bidderDist}, Defender dist: ${defenderDist}`);
+        if (bidderDist === 4) {
           needsRoundupPrompt = true;
           bidderScore = Math.floor(bidderRaw / 10);
           defenderScore = Math.floor(defenderRaw / 10);
-        } else if (bidderDist < defenderDist) {
-          bidderScore = Math.floor(bidderRaw / 10) + 1;
-          defenderScore = Math.floor(defenderRaw / 10);
         } else {
-          bidderScore = Math.floor(bidderRaw / 10);
-          defenderScore = Math.floor(defenderRaw / 10) + 1;
+          if(bidderDist < 4)
+            bidderScore = Math.floor(bidderRaw / 10) + 1;
+          else
+            bidderScore = Math.floor(bidderRaw / 10);
+
+          if(defenderDist < 4)
+            defenderScore = Math.floor(defenderRaw / 10) + 1;
+          else
+            defenderScore = Math.floor(defenderRaw / 10);
         }
       } else {
         bidderScore = Math.floor(bidderRaw / 10);
