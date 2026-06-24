@@ -5,5 +5,5 @@ import react from "@vitejs/plugin-react";
 // e.g. if your repo is github.com/yourname/pilotta then set base: "/pilotta/"
 export default defineConfig({
   plugins: [react()],
-  base: "/pilotta-scorer/",
+  base: "/pilotta-app/",
 });
